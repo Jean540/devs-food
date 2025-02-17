@@ -1,3 +1,4 @@
+"use client";
 import { ActionDispatch, createContext, ReactNode, useReducer } from "react";
 
 type Search = {

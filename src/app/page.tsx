@@ -1,23 +1,52 @@
 "use client";
-import { Header } from "@/components/Header";
-
 import { useRouter } from "next/navigation";
-
-// import { useHistory } from "react-router-dom";
-// import { Container, Titulo } from './styled';
+import { useEffect, useState } from "react";
+import api from "../api/api";
+import { Category, Item } from "@/types/category";
+import { CategoryItem } from "@/components/CategoryItem";
 
 const HomePage = () => {
   const router = useRouter();
-  // const history = useHistory();
-  const handleButtonClick = () => {
-    router.push("./tela2");
-    //  history.push('/tela2/testador');
-  };
+  const [categories, setCategories] = useState<Item[]>();
+
+  const [activeCategory, setActiveCategory] = useState(0);
+
+  useEffect(() => {
+    api.getCategories().then((cat: Category) => {
+      if (cat.error == "") {
+        setCategories(cat.result);
+      }
+    });
+  }, []);
 
   return (
     <div>
-      <h1>Home Page</h1>
-      <button onClick={handleButtonClick}>Ir para Tela 2</button>
+      {/* <h1>Home Page</h1>
+      <button onClick={() => router.push("./tela2")}>Ir para Tela 2</button> */}
+      {categories != undefined && (
+        <div className="CategoryArea text-white mt-[20px]">
+          Selecione uma categoria
+          <ul className="CategoryList flex gap-5 mt-[10px]">
+            <CategoryItem
+              data={{
+                id: 0,
+                name: "Todas as Categorias",
+                image: "/assets/food-and-restaurant.png",
+              }}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+            />
+            {categories.map((item, key) => (
+              <CategoryItem
+                key={key}
+                data={item}
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
+              />
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

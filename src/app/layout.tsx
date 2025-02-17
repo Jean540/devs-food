@@ -6,6 +6,7 @@ import { Card } from "@/components/Card";
 import { PageBody } from "@/components/PageBody";
 import { UserProvider } from "@/contexts/UserContext";
 import { Header } from "@/components/Header";
+import { SearchProvider } from "@/contexts/SearchContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,15 +30,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <UserProvider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased flex `}
-        >
-          <Menu />
-          <PageBody>{children}</PageBody>
-          <Card />
-        </body>
-      </UserProvider>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex `}
+      >
+        <UserProvider>
+          <SearchProvider>
+            <Menu />
+            <PageBody>{children}</PageBody>
+            <Card />
+          </SearchProvider>
+        </UserProvider>
+      </body>
     </html>
   );
 }

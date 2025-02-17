@@ -1,7 +1,8 @@
 "use client";
 
+import { SearchContext } from "@/contexts/SearchContext";
 import Image from "next/image";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 type Props = {
   search: string;
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export const Header = ({ search, onSearch }: Props) => {
+  const seachContext = useContext(SearchContext);
   const [inputActive, setInputActive] = useState(search ? 300 : 0);
   const handleInputFocus = () => {
     setInputActive(300);
@@ -28,26 +30,27 @@ export const Header = ({ search, onSearch }: Props) => {
         width={230}
         alt="Logo image"
       />
-
-      <input
-        type="text"
-        placeholder="Digite um produto..."
-        className=" outline-none text-black rounded-[25px] h-[50px] text-[15px]"
-        onFocus={handleInputFocus}
-        onBlur={handleInputBlur}
-        value={search}
-        onChange={(e) => onSearch(e.target.value)}
-        style={{
-          cursor: inputActive ? "text" : "pointer",
-          transition: "all ease .3s",
-          width: inputActive,
-          backgroundImage: `url(/assets/search.png)`,
-          backgroundSize: "30px",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "10px center",
-          paddingLeft: "50px",
-        }}
-      />
+      {seachContext?.search.showInput && (
+        <input
+          type="text"
+          placeholder="Digite um produto..."
+          className=" outline-none text-black rounded-[25px] h-[50px] text-[15px]"
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          value={search}
+          onChange={(e) => onSearch(e.target.value)}
+          style={{
+            cursor: inputActive ? "text" : "pointer",
+            transition: "all ease .3s",
+            width: inputActive,
+            backgroundImage: `url(/assets/search.png)`,
+            backgroundSize: "30px",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "10px center",
+            paddingLeft: "50px",
+          }}
+        />
+      )}
     </div>
   );
 };

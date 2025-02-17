@@ -12,7 +12,7 @@ export const PageBody = ({ children }: { children: ReactNode }) => {
       style={{ backgroundImage: `url('assets/bg.png')` }}
     >
       <Header search={headerSearch} onSearch={setHeaderSearch} />
-      <div className="mt-20">{children}</div>
+      <div className="">{children}</div>
     </div>
   );
 };
