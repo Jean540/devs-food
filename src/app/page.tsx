@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import api from "../api/api";
 import { Category, Item } from "@/types/category";
 import { CategoryItem } from "@/components/CategoryItem";
+import { Tooltip } from "react-tooltip";
 
 const HomePage = () => {
   const router = useRouter();
@@ -19,12 +20,15 @@ const HomePage = () => {
     });
   }, []);
 
+  useEffect(() => {}, [activeCategory]);
+
   return (
     <div>
       {/* <h1>Home Page</h1>
       <button onClick={() => router.push("./tela2")}>Ir para Tela 2</button> */}
       {categories != undefined && (
         <div className="CategoryArea text-white mt-[20px]">
+          <Tooltip id="tip-top" place="top" />
           Selecione uma categoria
           <ul className="CategoryList flex gap-5 mt-[10px]">
             <CategoryItem

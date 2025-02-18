@@ -1,6 +1,6 @@
 import { Item } from "@/types/category";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 
 type Props = {
   data: Item;
@@ -15,8 +15,14 @@ export const CategoryItem = ({
 }: Props) => {
   return (
     <li
-      className="size-[80px] rounded-[20px] flex justify-center items-center"
-      style={{ background: activeCategory == data.id ? "white" : "#AAE09A" }}
+      data-tooltip-id="tip-top"
+      data-tooltip-content={data.name}
+      data-tooltip-place="top"
+      className="size-[80px] rounded-[20px] flex justify-center items-center cursor-pointer"
+      style={{
+        background: activeCategory == data.id ? "white" : "#AAE09A",
+        transition: "all ease 0.3s",
+      }}
       onClick={() => setActiveCategory(data.id)}
     >
       <Image
