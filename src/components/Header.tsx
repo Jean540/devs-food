@@ -4,20 +4,22 @@ import { SearchContext } from "@/contexts/SearchContext";
 import Image from "next/image";
 import { useContext, useState } from "react";
 
-type Props = {
-  search: string;
-  onSearch: (input: string) => void;
-};
+// type Props = {
+//   search: string;
+//   onSearch: (input: string) => void;
+// };
 
-export const Header = ({ search, onSearch }: Props) => {
+export const Header = () => {
   const seachContext = useContext(SearchContext);
-  const [inputActive, setInputActive] = useState(search ? 300 : 0);
+  const [inputActive, setInputActive] = useState(
+    seachContext?.search.inputSearch ? 300 : 0
+  );
   const handleInputFocus = () => {
     setInputActive(300);
   };
 
   const handleInputBlur = () => {
-    if (search === "") {
+    if (seachContext?.search.inputSearch === "") {
       setInputActive(0);
     }
   };
@@ -37,8 +39,13 @@ export const Header = ({ search, onSearch }: Props) => {
           className=" outline-none text-black rounded-[25px] h-[50px] text-[15px]"
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
-          value={search}
-          onChange={(e) => onSearch(e.target.value)}
+          value={seachContext?.search.inputSearch}
+          onChange={(e) =>
+            seachContext?.dispatch({
+              type: "SET_SEARCH",
+              payload: { inputSearch: e.target.value },
+            })
+          }
           style={{
             cursor: inputActive ? "text" : "pointer",
             transition: "all ease .3s",

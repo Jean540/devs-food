@@ -5,4 +5,14 @@ export default {
     const json = await res.json();
     return json;
   },
+  getProducts: async () => {
+    const res = await fetch(`${baseUrl}/products`);
+    const json = await res.json();
+    return json;
+  },
+  getProduct: async (id: string) => {
+    const res = await fetch(`${baseUrl}/product/${id}`);
+    const json = await res.json();
+    return json;
+  },
 };
