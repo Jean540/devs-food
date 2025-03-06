@@ -17,8 +17,9 @@ export const Cart = () => {
   useEffect(() => {
     cartContext?.cart.products.result?.data.forEach((element) => {
       // setTotal(element.price * element.quantity);
+      console.log("entrei");
     });
-  }, [cartContext]);
+  }, [cartContext?.cart.products.result]);
 
   return (
     <div className="bg-[#136713] rounded-t-[10px] fixed right-[30px] bottom-0 p-[15px] ">
@@ -62,7 +63,14 @@ export const Cart = () => {
         <div className="mb-5">
           <CartFinalPrices label="Desconto" price={0} />
           <CartFinalPrices label="Taxa de entrega" price={0} />
-          <CartFinalPrices label="Total" price={total} />
+          <CartFinalPrices
+            label="Total"
+            price={
+              cartContext?.cart.products.result?.total
+                ? cartContext.cart.products.result.total
+                : 0
+            }
+          />
         </div>
         <div className="bg-[#073C07] text-center text-[15px] p-3 rounded-full">
           FINALIZAR COMPRA

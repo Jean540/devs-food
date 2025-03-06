@@ -32,11 +32,14 @@ const cartReducer = (cart: Cart, action: CartReducerActions) => {
   let products = cart.products.result?.data
     ? [...cart.products.result.data]
     : [];
+  let total = cart.products.result?.total ? cart.products.result.total : 0;
+
   switch (action.type) {
     case "ADD_PRODUCT":
       let id = action.payload.data.id;
 
       let index = products.findIndex((item) => item.id == id);
+      total = total + action.payload.data.price;
       if (index > -1) {
         products[index] = {
           ...products[index],
@@ -55,12 +58,14 @@ const cartReducer = (cart: Cart, action: CartReducerActions) => {
           result: {
             ...cart.products.result,
             data: products,
+            total,
           },
         },
       };
       break;
     case "CHENGE_PRODUCT":
       if (action.payload.type == "+") {
+        total = total + products[action.payload.key].price;
         products[action.payload.key] = {
           ...products[action.payload.key],
           quantity: products[action.payload.key].quantity + 1,
@@ -72,6 +77,7 @@ const cartReducer = (cart: Cart, action: CartReducerActions) => {
             result: {
               ...cart.products.result,
               data: products,
+              total,
             },
           },
         };
@@ -79,6 +85,7 @@ const cartReducer = (cart: Cart, action: CartReducerActions) => {
         products[action.payload.key].quantity > 1 &&
         action.payload.type == "-"
       ) {
+        total = total - products[action.payload.key].price;
         products[action.payload.key] = {
           ...products[action.payload.key],
           quantity: products[action.payload.key].quantity - 1,
@@ -90,10 +97,12 @@ const cartReducer = (cart: Cart, action: CartReducerActions) => {
             result: {
               ...cart.products.result,
               data: products,
+              total,
             },
           },
         };
       } else {
+        total = total - products[action.payload.key].price;
         products = products.filter(
           (product, index) => index != action.payload.key
         );
@@ -104,6 +113,7 @@ const cartReducer = (cart: Cart, action: CartReducerActions) => {
             result: {
               ...cart.products.result,
               data: products,
+              total,
             },
           },
         };
