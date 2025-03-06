@@ -1,3 +1,5 @@
+//criar um array de produtos na aplicação e tirar o array do data
+
 export type Product = {
   error: string;
   result: {
@@ -16,4 +18,5 @@ export type ProductItemType = {
   price: number;
   ingredients: string;
   points: number;
+  quantity: number;
 };

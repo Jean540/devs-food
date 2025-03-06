@@ -10,16 +10,16 @@ import { useContext, useState } from "react";
 // };
 
 export const Header = () => {
-  const seachContext = useContext(SearchContext);
+  const searchContext = useContext(SearchContext);
   const [inputActive, setInputActive] = useState(
-    seachContext?.search.inputSearch ? 300 : 0
+    searchContext?.search.inputSearch ? 300 : 0
   );
   const handleInputFocus = () => {
     setInputActive(300);
   };
 
   const handleInputBlur = () => {
-    if (seachContext?.search.inputSearch === "") {
+    if (searchContext?.search.inputSearch === "") {
       setInputActive(0);
     }
   };
@@ -32,16 +32,16 @@ export const Header = () => {
         width={230}
         alt="Logo image"
       />
-      {seachContext?.search.showInput && (
+      {searchContext?.search.showInput && (
         <input
           type="text"
           placeholder="Digite um produto..."
           className=" outline-none text-black rounded-[25px] h-[50px] text-[15px]"
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
-          value={seachContext?.search.inputSearch}
+          value={searchContext?.search.inputSearch}
           onChange={(e) =>
-            seachContext?.dispatch({
+            searchContext?.dispatch({
               type: "SET_SEARCH",
               payload: { inputSearch: e.target.value },
             })

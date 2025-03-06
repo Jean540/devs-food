@@ -1,10 +1,28 @@
+"use client";
+import { ModalContext } from "@/contexts/ModalContext";
 import { ProductItemType } from "@/types/product";
 import Image from "next/image";
-import React from "react";
+import React, { useContext } from "react";
 
 export const ProductItem = ({ product }: { product: ProductItemType }) => {
+  const modalContext = useContext(ModalContext);
+
+  const handleClick = () => {
+    modalContext?.dispatch({
+      type: "CHANGE_DATA",
+      payload: { data: product },
+    });
+    modalContext?.dispatch({
+      type: "CHANGE_VISIBILITY",
+      payload: { visibility: true },
+    });
+  };
+
   return (
-    <li className="flex items-center bg-white rounded-[5px] p-[10px] shadow-md cursor-pointer">
+    <li
+      className="flex items-center bg-white rounded-[5px] p-[10px] shadow-md cursor-pointer"
+      onClick={handleClick}
+    >
       <div className="ProducPhotoArea">
         <Image
           src={product.image}

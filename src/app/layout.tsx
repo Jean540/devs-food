@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Menu } from "@/components/Menu";
-import { Card } from "@/components/Card";
+import { Cart } from "@/components/Cart";
 import { PageBody } from "@/components/PageBody";
 import { UserProvider } from "@/contexts/UserContext";
 import { Header } from "@/components/Header";
 import { SearchProvider } from "@/contexts/SearchContext";
+import { ModalProvider } from "@/contexts/ModalContext";
+import { CartContext, CartProvider } from "@/contexts/CartContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,9 +37,13 @@ export default function RootLayout({
       >
         <UserProvider>
           <SearchProvider>
-            <Menu />
-            <PageBody>{children}</PageBody>
-            <Card />
+            <ModalProvider>
+              <CartProvider>
+                <Menu />
+                <PageBody>{children}</PageBody>
+                <Cart />
+              </CartProvider>
+            </ModalProvider>
           </SearchProvider>
         </UserProvider>
       </body>
