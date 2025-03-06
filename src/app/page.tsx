@@ -1,17 +1,43 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import api from "../api/api";
 import { Category, Item } from "@/types/category";
-import { CategoryItem } from "@/components/CategoryItem";
-import { Tooltip } from "react-tooltip";
+
+import { Product, ProductItemType } from "@/types/product";
+import { ProductArea } from "@/components/ProductArea";
+import { CategoryArea } from "@/components/CategoryArea";
+import { ProductPaginationItem } from "@/components/ProductPaginationItem";
+import { SearchContext } from "@/contexts/SearchContext";
+import { Modal } from "@/components/Modal";
+import { ModalProduct } from "@/components/ModalProduct";
+
+let searchTimer: NodeJS.Timeout;
 
 const HomePage = () => {
   const router = useRouter();
   const [categories, setCategories] = useState<Item[]>();
+  const [products, setProducts] = useState<ProductItemType[]>();
+  const [totalPages, setTotalPages] = useState(0);
 
   const [activeCategory, setActiveCategory] = useState(0);
+  const [activePage, setActivePage] = useState(1);
+  const [searchConte, setActiveSearch] = useState("");
 
+  const searchContext = useContext(SearchContext);
+
+  const getProducts = async () => {
+    const prods: Product = await api.getProducts(
+      activeCategory,
+      activePage,
+      searchConte
+    );
+    if (prods.error == "") {
+      setTotalPages(prods.result.pages);
+      setActivePage(prods.result.page);
+      setProducts(prods.result.data);
+    }
+  };
   useEffect(() => {
     api.getCategories().then((cat: Category) => {
       if (cat.error == "") {
@@ -20,37 +46,52 @@ const HomePage = () => {
     });
   }, []);
 
-  useEffect(() => {}, [activeCategory]);
+  useEffect(() => {
+    setProducts([]);
+    getProducts();
+  }, [activeCategory, activePage, searchConte]);
+
+  useEffect(() => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      if (searchContext?.search.inputSearch != undefined) {
+        setActiveSearch(searchContext?.search.inputSearch);
+        console.log(searchContext?.search.inputSearch);
+      }
+    }, 2000);
+  }, [searchContext?.search.inputSearch]);
 
   return (
     <div>
       {/* <h1>Home Page</h1>
       <button onClick={() => router.push("./tela2")}>Ir para Tela 2</button> */}
+
       {categories != undefined && (
-        <div className="CategoryArea text-white mt-[20px]">
-          <Tooltip id="tip-top" place="top" />
-          Selecione uma categoria
-          <ul className="CategoryList flex gap-5 mt-[10px]">
-            <CategoryItem
-              data={{
-                id: 0,
-                name: "Todas as Categorias",
-                image: "/assets/food-and-restaurant.png",
-              }}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-            />
-            {categories.map((item, key) => (
-              <CategoryItem
+        <CategoryArea
+          categories={categories}
+          activeCategory={activeCategory}
+          setActiveCategory={setActiveCategory}
+        />
+      )}
+      {products != undefined && <ProductArea products={products} />}
+
+      {totalPages > 0 && (
+        <div className="ProductPaginationArea flex flex-wrap gap-[10px]">
+          {Array(totalPages)
+            .fill(0)
+            .map((item, key) => (
+              <ProductPaginationItem
                 key={key}
-                data={item}
-                activeCategory={activeCategory}
-                setActiveCategory={setActiveCategory}
+                activePage={activePage}
+                currentPage={key + 1}
+                onClick={() => setActivePage(key + 1)}
               />
             ))}
-          </ul>
         </div>
       )}
+      <Modal>
+        <ModalProduct />
+      </Modal>
     </div>
   );
 };

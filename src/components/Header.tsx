@@ -4,20 +4,22 @@ import { SearchContext } from "@/contexts/SearchContext";
 import Image from "next/image";
 import { useContext, useState } from "react";
 
-type Props = {
-  search: string;
-  onSearch: (input: string) => void;
-};
+// type Props = {
+//   search: string;
+//   onSearch: (input: string) => void;
+// };
 
-export const Header = ({ search, onSearch }: Props) => {
-  const seachContext = useContext(SearchContext);
-  const [inputActive, setInputActive] = useState(search ? 300 : 0);
+export const Header = () => {
+  const searchContext = useContext(SearchContext);
+  const [inputActive, setInputActive] = useState(
+    searchContext?.search.inputSearch ? 300 : 0
+  );
   const handleInputFocus = () => {
     setInputActive(300);
   };
 
   const handleInputBlur = () => {
-    if (search === "") {
+    if (searchContext?.search.inputSearch === "") {
       setInputActive(0);
     }
   };
@@ -30,15 +32,20 @@ export const Header = ({ search, onSearch }: Props) => {
         width={230}
         alt="Logo image"
       />
-      {seachContext?.search.showInput && (
+      {searchContext?.search.showInput && (
         <input
           type="text"
           placeholder="Digite um produto..."
           className=" outline-none text-black rounded-[25px] h-[50px] text-[15px]"
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
-          value={search}
-          onChange={(e) => onSearch(e.target.value)}
+          value={searchContext?.search.inputSearch}
+          onChange={(e) =>
+            searchContext?.dispatch({
+              type: "SET_SEARCH",
+              payload: { inputSearch: e.target.value },
+            })
+          }
           style={{
             cursor: inputActive ? "text" : "pointer",
             transition: "all ease .3s",

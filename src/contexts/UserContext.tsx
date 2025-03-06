@@ -9,14 +9,30 @@ import {
 
 const STORAGE_KEY = "userContextContent";
 
+type Address = {
+  street: string;
+  district: string;
+  number: number;
+  city: string;
+  state: string;
+};
+
 type User = {
   name: string;
   token: string;
+  address: Address;
 };
 
 const initialState: User = {
   token: "fsfse", //temos que utilizar o persist para esse token
-  name: "Jean",
+  name: "Fulano",
+  address: {
+    street: "Rua Bla bla bla",
+    district: "Faz de conta",
+    number: 999,
+    city: "Cidade",
+    state: "Estado",
+  },
 };
 
 type SetNameAction = {
